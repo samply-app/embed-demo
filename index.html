@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- #template Title -->
+    <title>Samply Embedded Players</title>
+  </head>
+  <body>
+    <!-- #template Top Title -->
+    <div style="display: flex; margin: 20px -8px 20px -8px; z-index: 1">
+      <div class="text-head-1">Samply Embedded Players</div>
+    </div>
+    <!-- #template Preface -->
+    <p>
+      Whether you're a musician, sound designer, audio engineer, or anything in
+      between, Samply embedded players allow you to effortlessly show off your
+      audio with an elegant and customizable interface.
+    </p>
+    <p>View the examples below to experience embedded players in action!</p>
+    <!-- #template Demo Selector Tabs -->
+    <div class="tab-container">
+      <span style="cursor: default">Demo:</span>
+      <span id="tab-album" class="tab active" onclick="onTabClick(this)"
+        >Album</span
+      >
+      <span id="tab-shootout" class="tab" onclick="onTabClick(this)"
+        >Reamp Shootout</span
+      >
+      <span id="tab-single" class="tab" onclick="onTabClick(this)"
+        >Single Track</span
+      >
+    </div>
+    <!-- #template Demo Area -->
+    <div class="demo-area">
+      <iframe
+        id="demo-player"
+        src="https://next.samply.app/embed/dcccv8hnClvbeL1OSrT2?color=346654"
+        height="300"
+        class="player"
+        frameborder="0"
+      ></iframe>
+      <!-- #template Tweakers -->
+      <div class="tweakers">
+        <!-- #template Width Radios -->
+        <div class="radio-container" onclick="setPlayerNarrow(false)">
+          <input type="radio" id="radio-1" name="radio" checked />
+          <label for="radio-1">Wide</label>
+        </div>
+        <div class="radio-container" onclick="setPlayerNarrow(true)">
+          <input type="radio" id="radio-2" name="radio" />
+          <label for="radio-2">Narrow</label>
+        </div>
+        <!-- #template Color input -->
+        <label for="color-input" style="margin-left: auto">Color:</label>
+        <input
+          id="color-input"
+          type="color"
+          value="#346654"
+          onchange="setPlayerColor(this.value)"
+        />
+      </div>
+      <!-- #template Demo Source -->
+      <div>
+        <label style="color: var(--color-frost)">HTML:</label>
+        <div id="demo-src" class="code" style="margin-bottom: 16px"></div>
+        <label style="color: var(--color-frost)">CSS:</label>
+        <div class="code">
+          .player {</br>
+          &nbsp  margin: 16px auto;</br>
+          &nbsp  padding-bottom: 32px;</br>
+          &nbsp  display: block;</br>
+          &nbsp  width: 100%;</br>
+          &nbsp  max-width: 750px;</br>
+          }</br>
+          .player.narrow {</br>
+          &nbsp max-width: 600px;</br>
+          }
+        </div>
+      </div>
+    </div>
+  </body>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Space+Mono"
+  />
+</html>
+<script>
+  const playerParams = {
+    album:  {
+      id: "dcccv8hnClvbeL1OSrT2",
+      color: "346654",
+      height: 300
+    },
+    reamp:  {
+      id: "z9PNqXQsyQZEw4h2XAws",
+      color: "243360",
+      height: 140
+    },
+    single: {
+      id: "PbQQlPDEzwhSfXANpyBy",
+      color: "33274f",
+      height: 140
+    }
+  }
+
+  function updateSrc() {
+    const demoSrc = document.querySelector("#demo-src");
+    const demoPlayer = document.querySelector("#demo-player");
+    demoSrc.textContent = demoPlayer.outerHTML;
+  }
+
+  function setPlayerHeight(height) {
+    const demoPlayer = document.querySelector("#demo-player");
+    demoPlayer.style.height = `${height}px`;
+    updateSrc();
+  }
+
+  function setPlayerNarrow(narrow) {
+
+    document.querySelector(".player").classList.toggle("narrow", narrow);
+    // set radio checked state
+    document.querySelector("#radio-2").checked = narrow;
+    document.querySelector("#radio-1").checked = !narrow;
+
+    updateSrc();
+  }
+
+  function setPlayerColor(color) {
+    // set player color
+    const demoPlayer = document.querySelector("#demo-player");
+    let src = demoPlayer.src;
+    src =
+      src.slice(0, src.indexOf("color=")) + `color=${color.replace("#", "")}`;
+    demoPlayer.src = src;
+    updateSrc();
+  }
+
+  function setPlayerSrc(playerId) {
+    const demoPlayer = document.querySelector("#demo-player");
+    const colorParam = demoPlayer.src.slice(demoPlayer.src.indexOf("?color="));
+    demoPlayer.src = `https://next.samply.app/embed/${playerId}${colorParam}`;
+    updateSrc();
+  }
+
+  function onTabClick(e) {
+    // clear active class
+    document.querySelectorAll(".tab").forEach(el => {
+      el.classList.remove("active");
+    });
+    // set active class
+    e.classList.add("active");
+
+    switch(e.id) {
+      case "tab-single":
+        setPlayerHeight(playerParams.single.height);
+        setPlayerColor(playerParams.single.color);
+        setPlayerSrc(playerParams.single.id);
+        break;
+      case "tab-shootout":
+        setPlayerHeight(playerParams.reamp.height);
+        setPlayerColor(playerParams.reamp.color);
+        setPlayerSrc(playerParams.reamp.id);
+        break;
+        case "tab-album":
+          setPlayerHeight(playerParams.album.height);
+          setPlayerColor(playerParams.album.color);
+          setPlayerSrc(playerParams.album.id);
+        break;
+    }
+  }
+
+  // init
+  updateSrc();
+</script>
+<style>
+  /* #style Variables */
+  :root {
+    --color-frost: #edf5f5;
+    --color-blush: #e2cfd8;
+    --color-coal: #181c19;
+    --color-frost-dull: #edf5f5a0;
+    --color-coal-dull: #181c1920;
+  }
+  /* #style Text */
+  .text-head-1 {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 48px;
+    letter-spacing: 0.25px;
+    padding: 0 20px 0 20px;
+    background-color: var(--color-coal);
+    color: var(--color-frost);
+    flex-shrink: 0;
+  }
+  .text-caption {
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+  }
+  /* #style Tags */
+  html {
+    background-color: var(--color-frost);
+    font-family: "Space Mono";
+  }
+  .img-head {
+    position: relative;
+    flex-grow: 1;
+    height: 48px;
+    color: var(--color-coal);
+    background-color: var(--color-blush);
+    padding: 4px 0 4px 0;
+    object-fit: cover;
+    display: inline;
+  }
+  p {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    color: var(--color-coal);
+    margin: 0 auto 20px auto;
+    max-width: 750px;
+  }
+  body {
+    padding: 0 12px;
+    margin: 0 auto;
+    max-width: 750px;
+  }
+  /* #style Tabs */
+  .tab-container {
+    margin-top: 32px;
+    display: flex;
+  }
+  .tab-container > * {
+    padding: 4px 16px;
+  }
+  .tab {
+    cursor: pointer;
+  }
+  .tab:hover {
+    background-color: var(--color-coal-dull);
+  }
+  .tab.active {
+    color: var(--color-frost);
+    background-color: var(--color-coal);
+    text-shadow: var(--color-frost) 0 0 2px;
+  }
+  /* #style Demo */
+  .demo-area {
+    padding: 16px 20px;
+    background-color: var(--color-coal);
+    margin-bottom: 32px;
+  }
+  .demo-area > * {
+    margin: 16px 0;
+    padding-top: 16px;
+  }
+  .demo-area > *:not(:first-child) {
+    border-top: var(--color-frost-dull) 1px solid;
+  }
+  .player {
+    margin: 16px auto;
+    padding-bottom: 32px;
+    display: block;
+    width: 100%;
+    max-width: 750px;
+  }
+  .player.narrow {
+    max-width: 600px;
+  }
+  .code {
+    color: var(--color-frost-dull);
+    font-size: 12px;
+  }
+  /* #style Tweakers */
+  .tweakers {
+    background-color: var(--color-coal);
+    display: flex;
+    gap: 12px;
+  }
+  .tweakers > * {
+    color: var(--color-frost-dull);
+  }
+  .tweakers .radio-container,
+  .tweakers .radio-container * {
+    cursor: pointer;
+  }
+  .tweakers input[type="radio"]:checked + label {
+    color: var(--color-frost) !important;
+    text-shadow: var(--color-frost) 0 0 1px;
+  }
+</style>
