@@ -1,2 +1,2 @@
 # embed-demo
-An example of how to use Samply embedded players.
+An example showing how to use Samply embedded players.
